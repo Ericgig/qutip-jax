@@ -40,7 +40,7 @@ def _check_matmul_shape(left, right, out):
         )
 
 
-def add_jaxarray(left, right, scale=1):
+def add_jaxarray(left, right, scale=None):
     """
     Perform the operation
         left + scale*right
@@ -49,7 +49,7 @@ def add_jaxarray(left, right, scale=1):
     """
     _check_same_shape(left, right)
 
-    if scale == 1 and isinstance(scale, int):
+    if scale is None:
         out = JaxArray._fast_constructor(
             left._jxa + right._jxa, shape=left.shape
         )

@@ -70,7 +70,7 @@ def test_ode_step():
 
 def test_ode_grad():
     H = num(10)
-    c_ops = [QobjEvo([destroy(10), cte], args={"A": 1.0})]
+    c_ops = [QobjEvo([destroy(10), cte], args={"A": 10.0})]
 
     options = {"method": "diffrax", "normalize_output": False}
     solver = MESolver(H, c_ops, options=options)
@@ -81,8 +81,36 @@ def test_ode_grad():
 
     df = jax.value_and_grad(f, argnums=[1, 2])
 
-    val, (dt, dA) = df(solver, 0.2, 0.5)
+    A = 0.45
+    t = 0.15
 
-    assert val == pytest.approx(9 * np.exp(- 0.2 * 0.5))
-    assert dt == pytest.approx(9 * np.exp(- 0.2 * 0.5) * -0.5)
-    assert dA == pytest.approx(9 * np.exp(- 0.2 * 0.5) * -0.2)
+    val, (dt, dA) = df(solver, t, A)
+
+    assert val == pytest.approx(9 * np.exp(-t * A**2))
+    assert dt == pytest.approx(9 * np.exp(-t * A**2) * -A**2)
+    assert dA == pytest.approx(9 * np.exp(-t * A**2) * -t * 2 * A)
+
+
+def test_ode_grad_funcoper():
+    def H(t):
+        return num(10, dtype="jax")
+
+    c_ops = [QobjEvo([destroy(10), cte], args={"A": 1.0})]
+
+    options = {"method": "diffrax", "normalize_output": False}
+    solver = MESolver(QobjEvo(H), c_ops, options=options)
+
+    def f(solver, t, A):
+        result = solver.run(basis(10, 9), [0, t], e_ops=num(10), args={"A": A})
+        return result.e_data[0][-1].real
+
+    df = jax.value_and_grad(f, argnums=[1, 2])
+
+    A = 0.45
+    t = 0.15
+
+    val, (dt, dA) = df(solver, t, A)
+
+    assert val == pytest.approx(9 * np.exp(-t * A**2))
+    assert dt == pytest.approx(9 * np.exp(-t * A**2) * -A**2)
+    assert dA == pytest.approx(9 * np.exp(-t * A**2) * -t * 2 * A)

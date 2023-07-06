@@ -64,6 +64,8 @@ class DiffraxIntegrator(Integrator):
         return self.t, JaxArray(_float2cplx(self.state))
 
     def integrate(self, t, copy=False, **kwargs):
+        if kwargs:
+            self.arguments(kwargs)
         sol = diffrax.diffeqsolve(
             self.ODEsystem,
             t0=self.t,
@@ -71,7 +73,7 @@ class DiffraxIntegrator(Integrator):
             y0=self.state,
             saveat=diffrax.SaveAt(t1=True, solver_state=True),
             solver_state=self.solver_state,
-            args=(self.system, kwargs),
+            args=(self.system, {}),
             **self._options,
         )
         self.t = t
