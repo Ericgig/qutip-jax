@@ -25,7 +25,7 @@ defaults:
 
 jobs:
   cases:
-    if: github.repository == 'qutip/qutip-jax'
+    # if: github.repository == 'qutip/qutip-jax'
     name: ${{ matrix.os }}, ${{ matrix.case-name }}
     runs-on: ${{ matrix.os }}
     strategy:
