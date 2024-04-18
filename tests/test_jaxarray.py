@@ -50,3 +50,8 @@ def test_jit():
 
     tr = func(arr)
     assert isinstance(tr, jnp.ndarray)
+
+
+def test_fail():
+    # Test to test action failure openning issues.
+    raise Exception()
