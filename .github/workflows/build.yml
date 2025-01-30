@@ -47,6 +47,14 @@ jobs:
         persist-credentials: false
     - name: Checkout updated version
       run: git pull
+    - name: Write logs
+      run: |
+        echo ${{ github.ref }}
+        echo ${{ github.repository }}
+        echo ${{ (github.repository == 'qutip/qutip-jax') }}
+        echo ${{ (! startsWith(github.ref, 'refs/tags/')) }}
+        echo ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'qutip/qutip-jax') }}
+        echo ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'qutip/qutip-jax' }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
