@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - misc.auto_releases
     tags:
       - v*
   workflow_dispatch:
@@ -65,8 +66,7 @@ jobs:
     name: >-
       Publish qutip-jax to PyPI
     if: |
-      ${{ (startsWith(github.ref, 'refs/tags/')) &&
-      (github.repository == 'qutip/qutip-jax') }}
+      ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'qutip/qutip-jax' }}
     needs:
     - build
     runs-on: ubuntu-latest
@@ -149,6 +149,9 @@ jobs:
       run: |
         echo ${{ github.ref }}
         echo ${{ github.repository }}
+        echo ${{ (github.repository == 'qutip/qutip-jax') }}
+        echo ${{ (! startsWith(github.ref, 'refs/tags/')) }}
+        echo ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'qutip/qutip-jax') }}
     - name: Download all the dists
       uses: actions/download-artifact@v4
       with:
