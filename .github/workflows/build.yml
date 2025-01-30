@@ -65,8 +65,8 @@ jobs:
     name: >-
       Publish qutip-jax to PyPI
     if: |
-      startsWith(github.ref, 'refs/tags/') &&
-      github.repository == 'qutip/qutip-jax'
+      ${{ (startsWith(github.ref, 'refs/tags/')) &&
+      (github.repository == 'qutip/qutip-jax') }}
     needs:
     - build
     runs-on: ubuntu-latest
@@ -134,7 +134,7 @@ jobs:
     needs:
     - build
     if: |
-      ${{ (! startsWith(github.ref, 'refs/tags/')) && github.repository == 'qutip/qutip-jax' }}
+      ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'qutip/qutip-jax') }}
     runs-on: ubuntu-latest
 
     environment:
