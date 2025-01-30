@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - misc.auto_releases
     tags:
       - v*
   workflow_dispatch:
@@ -13,7 +12,7 @@ on:
 jobs:
   update_version:
     name: Update dev version
-    if: ${{ (github.ref == 'refs/heads/master') && (github.repository == 'Ericgig/qutip-jax') }}
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -44,14 +43,6 @@ jobs:
         persist-credentials: false
     - name: Checkout updated version
       run: git pull
-    - name: Write logs
-      run: |
-        echo ${{ github.ref }}
-        echo ${{ github.repository }}
-        echo ${{ (github.repository == 'Ericgig/qutip-jax') }}
-        echo ${{ (! startsWith(github.ref, 'refs/tags/')) }}
-        echo ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'Ericgig/qutip-jax') }}
-        echo ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'Ericgig/qutip-jax' }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -70,8 +61,7 @@ jobs:
   publish-to-pypi:
     name: >-
       Publish qutip-jax to PyPI
-    if: |
-      ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'Ericgig/qutip-jax' }}
+    if: startsWith(github.ref, 'refs/tags/')
     needs:
     - build
     runs-on: ubuntu-latest
@@ -138,8 +128,7 @@ jobs:
     name: Publish qutip-jax to TestPyPI
     needs:
     - build
-    if: |
-      ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'Ericgig/qutip-jax') }}
+    if: ${{ ! startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
 
     environment:
@@ -150,13 +139,6 @@ jobs:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
     steps:
-    - name: Write logs
-      run: |
-        echo ${{ github.ref }}
-        echo ${{ github.repository }}
-        echo ${{ (github.repository == 'qutip/qutip-jax') }}
-        echo ${{ (! startsWith(github.ref, 'refs/tags/')) }}
-        echo ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'qutip/qutip-jax') }}
     - name: Download all the dists
       uses: actions/download-artifact@v4
       with:
