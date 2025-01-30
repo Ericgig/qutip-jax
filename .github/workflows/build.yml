@@ -48,10 +48,10 @@ jobs:
       run: |
         echo ${{ github.ref }}
         echo ${{ github.repository }}
-        echo ${{ (github.repository == 'qutip/qutip-jax') }}
+        echo ${{ (github.repository == 'Ericgig/qutip-jax') }}
         echo ${{ (! startsWith(github.ref, 'refs/tags/')) }}
-        echo ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'qutip/qutip-jax') }}
-        echo ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'qutip/qutip-jax' }}
+        echo ${{ (! startsWith(github.ref, 'refs/tags/')) && (github.repository == 'Ericgig/qutip-jax') }}
+        echo ${{ startsWith(github.ref, 'refs/tags/') && github.repository == 'Ericgig/qutip-jax' }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
