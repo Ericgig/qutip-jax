@@ -58,16 +58,6 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
-    - name: Show environment
-      run: |
-        echo ${{ github.ref }}
-        echo ${{ startsWith(github.ref, 'refs/tags/') }}
-        echo ${{ ! startsWith(github.ref, 'refs/tags/') }}
-        echo ${{ github.repository }}
-        ls dist/*dev*.whl
-        echo $GITHUB_REF
-        if [[ dist/*dev*.whl ]]; then echo dist/*dev*.whl; echo "dev version"; fi
-        if [[ "$GITHUB_REF" == *"master"* ]]; then echo $GITHUB_REF; echo "dev version"; exit 1; fi
 
   publish-to-pypi:
     name: >-
@@ -94,7 +84,7 @@ jobs:
       run: |
         ls dist/*dev*.whl
         echo $GITHUB_REF
-        if [[ dist/*dev*.whl ]]; then echo dist/*dev*.whl; exit 1; fi
+        if [[ $(ls dist/*.whl) == *dev* ]]; then echo dist/*dev*.whl; exit 1; fi
         if [[ "$GITHUB_REF" == *"master"* ]]; then echo $GITHUB_REF; exit 1; fi
 
     - name: Publish distribution to PyPI
