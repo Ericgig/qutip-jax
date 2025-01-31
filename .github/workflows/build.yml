@@ -45,7 +45,7 @@ jobs:
       run: |
           if [[ $(git rev-parse --abbrev-ref HEAD) == master ]];
           then git pull;
-          fi 
+          fi
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -63,7 +63,9 @@ jobs:
     - name: Show environment
       run: |
         echo ${{ github.ref }}
-        echo ${{ github.ref }}
+        echo ${{ startsWith(github.ref, 'refs/tags/') }}
+        echo ${{ ! startsWith(github.ref, 'refs/tags/') }}
+        echo ${{ github.repository }}
 
   publish-to-pypi:
     name: >-
@@ -94,7 +96,7 @@ jobs:
         if [[ "$GITHUB_REF" == *"master"* ]]; then echo $GITHUB_REF; exit 1; fi
 
     - name: Publish distribution to PyPI
-      if: github.repository == 'qutip/qutip-jax'
+      if: github.repository == 'Ericgig/qutip-jax'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         verbose: true
@@ -153,7 +155,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Publish distribution  to TestPyPI
-      if: github.repository == 'qutip/qutip-jax'
+      if: github.repository == 'Ericgig/qutip-jax'
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
