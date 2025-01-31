@@ -42,8 +42,10 @@ jobs:
       with:
         persist-credentials: false
     - name: Checkout updated version
-      if: github.ref == 'refs/heads/master'
-      run: git pull
+      run: |
+          if [[ $(git rev-parse --abbrev-ref HEAD) == master ]];
+          then git pull;
+          fi 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -58,6 +60,10 @@ jobs:
       with:
         name: python-package-distributions
         path: dist/
+    - name: Show environment
+      run: |
+        echo ${{ github.ref }}
+        echo ${{ github.ref }}
 
   publish-to-pypi:
     name: >-
